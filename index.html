@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NAIM - Home</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#2c2c2c",
+                        "secondary-fixed-dim": "#00d7f0",
+                        "on-tertiary-fixed-variant": "#681f7a",
+                        "primary": "#ff9069",
+                        "on-secondary-fixed-variant": "#005964",
+                        "on-error": "#490006",
+                        "on-surface-variant": "#adaaaa",
+                        "primary-container": "#ff7948",
+                        "tertiary-dim": "#e190f0",
+                        "secondary-container": "#006875",
+                        "surface-container-high": "#20201f",
+                        "error-dim": "#d7383b",
+                        "on-primary-fixed-variant": "#551600",
+                        "tertiary": "#f5b2ff",
+                        "inverse-surface": "#fcf9f8",
+                        "primary-fixed": "#ff7948",
+                        "on-background": "#ffffff",
+                        "surface-container": "#1a1a1a",
+                        "inverse-on-surface": "#565555",
+                        "surface": "#0e0e0e",
+                        "tertiary-fixed-dim": "#e190f0",
+                        "surface-container-low": "#131313",
+                        "surface-container-highest": "#262626",
+                        "primary-fixed-dim": "#fe5e1e",
+                        "secondary-fixed": "#26e6ff",
+                        "on-secondary": "#004d57",
+                        "on-primary-fixed": "#000000",
+                        "on-tertiary-fixed": "#400050",
+                        "on-primary": "#591800",
+                        "error": "#ff716c",
+                        "on-error-container": "#ffa8a3",
+                        "outline-variant": "#484847",
+                        "surface-container-lowest": "#000000",
+                        "on-secondary-fixed": "#003a42",
+                        "secondary-dim": "#00d4ec",
+                        "surface-variant": "#262626",
+                        "on-tertiary": "#69207a",
+                        "secondary": "#00e3fd",
+                        "surface-tint": "#ff9069",
+                        "on-surface": "#ffffff",
+                        "on-tertiary-container": "#5e1470",
+                        "surface-dim": "#0e0e0e",
+                        "on-primary-container": "#451000",
+                        "tertiary-fixed": "#f09dff",
+                        "background": "#0e0e0e",
+                        "outline": "#767575",
+                        "error-container": "#9f0519",
+                        "tertiary-container": "#f09dff",
+                        "primary-dim": "#ff7441",
+                        "inverse-primary": "#ac3600",
+                        "on-secondary-container": "#e8fbff"
+                    },
+                    fontFamily: {
+                        "headline": ["Lexend"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #ff9069 0%, #ff7948 100%);
+        }
+
+        .glass-panel {
+            background: rgba(38, 38, 38, 0.6);
+            backdrop-filter: blur(20px);
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary-fixed min-h-screen flex flex-col">
+    <!-- TopAppBar -->
+    <header class="bg-[#131313] docked full-width top-0 z-50">
+        <div class="flex justify-between items-center w-full px-6 py-4">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant/20 active:scale-95 transition-transform">
+                    <img alt="User profile" class="w-full h-full object-cover"
+                        data-alt="Close-up portrait of a determined athlete with sweat on brow, dramatic high-contrast gym lighting with orange rim light"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1Bg7wqckABVSvQM9ZifOtbz7_NUdaaj9_4wPGno9P5mYwlPq5xVklvNiP5M5We_TfJ781GDjjyGzib02_eJVU7UOKSGZU_dkD6QckdJyLxRImri7wZatiB7LODWtNM49cwQGgd91oaTQfdFzlvSc9_zrvVmaj2hYabcRVF2e6M-HWuL1mPSAUjAiQl7BUk-nHIXIyTj5hyZvZFTtsPoM7efcf0BO743_dk2B2AnfMMeFowwz4x9oFJWmdmkLqw_uo85Bs3JZ-vj1l" />
+                </div>
+            </div>
+            <h1 class="text-2xl font-black text-[#ff9069] italic font-['Lexend'] tracking-tighter uppercase">NAIM</h1>
+            <button class="text-[#ff9069] hover:opacity-80 active:scale-95 transition-transform">
+                <span class="material-symbols-outlined text-2xl">bolt</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Canvas -->
+    <main class="flex-1 px-6 pt-8 pb-32">
+        <!-- Hero Brand Typography Section -->
+        <section class="mb-12">
+            <div class="relative">
+                <h2
+                    class="font-headline font-black text-[4rem] leading-none tracking-tighter text-surface-container-highest uppercase opacity-20 absolute -top-4 -left-1">
+                    NAIM
+                </h2>
+                <h2
+                    class="font-headline font-extrabold text-[2.5rem] leading-none tracking-tighter text-on-surface uppercase relative z-10">
+                    NAIM
+                </h2>
+                <div class="w-16 h-1.5 bg-primary mt-4"></div>
+            </div>
+            <p class="text-on-surface-variant text-sm mt-4 font-medium leading-relaxed max-w-[280px]">
+                Küçük telefon, dev güç. Sınırlarını zorlamaya ve her gün gelişmeye hazır mısın?
+            </p>
+        </section>
+
+        <!-- Active Workout Section -->
+        <section class="mb-10">
+            <div class="flex items-end justify-between mb-6">
+                <div class="space-y-1">
+                    <span class="font-label text-[0.6875rem] font-bold tracking-[0.2em] text-primary uppercase">GÜNLÜK
+                        HEDEF</span>
+                    <h3 class="font-headline text-2xl font-bold tracking-tight">Bugünkü Antrenmanın</h3>
+                </div>
+                <span class="font-label text-[0.6875rem] font-bold text-on-surface-variant mb-1">24 EKİM</span>
+            </div>
+
+            <!-- Empty State / Placeholder for Workout Card using Design System Layering -->
+            <div
+                class="relative group cursor-pointer overflow-hidden rounded-xl bg-surface-container-low p-8 border border-transparent hover:border-primary/20 transition-all duration-300">
+                <!-- Background Image Overlap Style -->
+                <div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-symbols-outlined text-[12rem] text-primary"
+                        style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex items-start justify-between mb-12">
+                        <div
+                            class="bg-surface-bright/50 px-3 py-1 rounded text-secondary font-label text-[10px] font-black tracking-widest uppercase">
+                            YÜKSEK ŞİDDET
+                        </div>
+                    </div>
+                    <h4 class="font-headline text-3xl font-black italic mb-2 tracking-tighter">GÜÇ VE KONDİSYON</h4>
+                    <p class="text-on-surface-variant text-sm max-w-[240px] leading-relaxed mb-6 font-medium">
+                        Bugün sınırlarını zorlama vakti. Hazırsan başlayalım.
+                    </p>
+                    <button
+                        class="kinetic-gradient text-on-primary-fixed px-6 py-3 rounded-md font-headline font-black text-sm tracking-widest uppercase flex items-center gap-2 active:scale-95 transition-transform">
+                        BAŞLA
+                        <span class="material-symbols-outlined text-sm">play_arrow</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Empty Content Grid -->
+        <section class="grid grid-cols-2 gap-4">
+            <!-- Metric Block 1 -->
+            <div class="bg-surface-container-highest p-5 rounded-lg aspect-square flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <span class="material-symbols-outlined text-secondary">favorite</span>
+                    <span class="font-label text-[10px] font-bold text-on-surface-variant uppercase">BPM</span>
+                </div>
+                <div class="font-headline text-4xl font-black text-primary leading-none">--</div>
+            </div>
+            <!-- Metric Block 2 -->
+            <div class="bg-surface-container-highest p-5 rounded-lg aspect-square flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <span class="material-symbols-outlined text-tertiary">local_fire_department</span>
+                    <span class="font-label text-[10px] font-bold text-on-surface-variant uppercase">KCAL</span>
+                </div>
+                <div class="font-headline text-4xl font-black text-primary leading-none">0</div>
+            </div>
+        </section>
+
+        <!-- Finish Workout Section -->
+        <section class="mt-10 mb-4">
+            <button onclick="alert('Tebrikler, antrenman kaydedildi!')"
+                class="w-full bg-error text-on-error px-6 py-4 rounded-xl font-headline font-black text-sm tracking-widest uppercase flex justify-center items-center gap-2 active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,113,108,0.2)]">
+                <span class="material-symbols-outlined">stop_circle</span>
+                ANTRENMANI BİTİR
+            </button>
+        </section>
+    </main>
+
+    <!-- BottomNavBar -->
+    <nav
+        class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#0e0e0e]/90 backdrop-blur-xl z-50 border-t border-[#484847]/20 shadow-[0_-4px_24px_rgba(255,144,105,0.06)]">
+        <!-- Dashboard (Active) -->
+        <a class="flex flex-col items-center justify-center text-[#ff9069] bg-[#262626] rounded-lg px-3 py-1 active:scale-90 transition-all duration-200"
+            href="#">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+            <span class="font-['Lexend'] text-[10px] font-bold tracking-widest uppercase mt-1">DASHBOARD</span>
+        </a>
+        <!-- Workouts -->
+        <a class="flex flex-col items-center justify-center text-[#adaaaa] opacity-50 hover:text-[#00e3fd] active:scale-90 transition-all duration-200"
+            href="#">
+            <span class="material-symbols-outlined">fitness_center</span>
+            <span class="font-['Lexend'] text-[10px] font-bold tracking-widest uppercase mt-1">WORKOUTS</span>
+        </a>
+        <!-- Stats -->
+        <a class="flex flex-col items-center justify-center text-[#adaaaa] opacity-50 hover:text-[#00e3fd] active:scale-90 transition-all duration-200"
+            href="#">
+            <span class="material-symbols-outlined">leaderboard</span>
+            <span class="font-['Lexend'] text-[10px] font-bold tracking-widest uppercase mt-1">STATS</span>
+        </a>
+        <!-- Profile -->
+        <a class="flex flex-col items-center justify-center text-[#adaaaa] opacity-50 hover:text-[#00e3fd] active:scale-90 transition-all duration-200"
+            href="#">
+            <span class="material-symbols-outlined">person</span>
+            <span class="font-['Lexend'] text-[10px] font-bold tracking-widest uppercase mt-1">PROFILE</span>
+        </a>
+    </nav>
+</body>
+
+</html>
