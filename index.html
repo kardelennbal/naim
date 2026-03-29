@@ -12,6 +12,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
+    <!-- Leaflet Map CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -83,6 +86,7 @@
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .kinetic-gradient {
@@ -96,6 +100,64 @@
 
         body {
             min-height: max(884px, 100dvh);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+        
+        h1, h2, h3, h4, .font-headline {
+            letter-spacing: -0.03em !important;
+        }
+
+        /* Material Design 3 Core Aesthetic Upgrades */
+        .rounded-md { border-radius: 16px !important; }
+        .rounded-lg { border-radius: 20px !important; }
+        .rounded-xl { border-radius: 28px !important; }
+        .rounded-2xl { border-radius: 32px !important; }
+        
+        button, a { -webkit-tap-highlight-color: transparent; outline: none; }
+        button:active, a:active { transform: scale(0.96); transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        input { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+        input:focus { border-color: #00d7f0 !important; box-shadow: 0 0 0 4px rgba(0, 215, 240, 0.15) !important; }
+        
+        /* Smooth Elevation & Shadows */
+        .shadow-sm { box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important; }
+        .shadow-md { box-shadow: 0 12px 32px rgba(0,0,0,0.16) !important; }
+        .shadow-lg { box-shadow: 0 16px 40px rgba(0,0,0,0.20) !important; }
+
+        /* Staggered Slide-Up Entry Animations */
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        main > section {
+            animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+            will-change: transform, opacity;
+        }
+        main > section:nth-child(1) { animation-delay: 0.1s; }
+        main > section:nth-child(2) { animation-delay: 0.15s; }
+        main > section:nth-child(3) { animation-delay: 0.2s; }
+        main > section:nth-child(4) { animation-delay: 0.25s; }
+        main > section:nth-child(5) { animation-delay: 0.3s; }
+        main > section:nth-child(6) { animation-delay: 0.35s; }
+        main > section:nth-child(7) { animation-delay: 0.4s; }
+
+        /* Floating Nav Active Pill Indicator */
+        .nav-active {
+            position: relative;
+        }
+        .nav-active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 4px;
+            background: #ff9069;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(255,144,105,0.4);
         }
     </style>
 </head>
@@ -103,7 +165,7 @@
 <body
     class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary-fixed min-h-screen flex flex-col">
     <!-- TopAppBar -->
-    <header class="bg-[#131313] docked full-width top-0 z-50">
+    <header class="bg-surface/85 backdrop-blur-2xl sticky top-0 z-40 transition-colors duration-300 border-b border-outline-variant/10 shadow-sm">
         <div class="flex justify-between items-center w-full px-6 py-4">
             <div class="flex items-center gap-3">
                 <div
@@ -114,15 +176,25 @@
                 </div>
             </div>
             <h1 class="text-2xl font-black text-[#ff9069] italic font-['Lexend'] tracking-tighter uppercase">NAIM</h1>
-            <button class="text-[#ff9069] hover:opacity-80 active:scale-95 transition-transform">
-                <span class="material-symbols-outlined text-2xl">bolt</span>
-            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="showGuide()" class="text-on-surface hover:text-[#ff9069] active:scale-95 transition-transform flex items-center justify-center" title="Akıllı Kılavuz">
+                    <span class="material-symbols-outlined text-2xl">help</span>
+                </button>
+                <button onclick="toggleTheme()" class="text-on-surface hover:text-[#ff9069] active:scale-95 transition-transform flex items-center justify-center" title="Tema Değiştir">
+                    <span id="themeIcon" class="material-symbols-outlined text-2xl">light_mode</span>
+                </button>
+                <button class="text-[#ff9069] hover:opacity-80 active:scale-95 transition-transform flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl">bolt</span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- Main Content Canvas -->
     <main class="flex-1 px-6 pt-8 pb-32">
-        <!-- Hero Brand Typography Section -->
+        <!-- TAB: HOME -->
+        <div id="tab-home" class="tab-content block pb-20 w-full animate-[slideUpFade_0.4s_ease-out]">
+<!-- Hero Brand Typography Section -->
         <section class="mb-12">
             <div class="relative">
                 <h2
@@ -139,8 +211,7 @@
                 Küçük telefon, dev güç. Sınırlarını zorlamaya ve her gün gelişmeye hazır mısın?
             </p>
         </section>
-
-        <!-- Active Workout Section -->
+<!-- Active Workout Section -->
         <section class="mb-10">
             <div class="flex items-end justify-between mb-6">
                 <div class="space-y-1">
@@ -178,8 +249,41 @@
                 </div>
             </div>
         </section>
-
-        <!-- Dynamic Empty Content Grid -->
+<!-- Activity Log Section -->
+        <section class="mb-10">
+            <h3 class="font-headline text-lg font-bold tracking-tight mb-4">Hızlı Ağırlık Girişi</h3>
+            <div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/20 shadow-sm relative overflow-hidden">
+                <div class="absolute right-[-5%] top-[-20%] opacity-5 pointer-events-none">
+                    <span class="material-symbols-outlined text-[8rem] text-primary" style="font-variation-settings: 'FILL' 1;">monitor_weight</span>
+                </div>
+                <div class="relative z-10 flex gap-3 mb-3">
+                    <input type="number" id="weightInput" placeholder="Örn: 60" 
+                        class="flex-1 min-w-0 bg-surface-container-highest border border-outline-variant/30 rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent placeholder-on-surface-variant font-medium outline-none transition-all"
+                        onkeypress="if(event.key === 'Enter') saveWeight()">
+                    <button onclick="saveWeight()" 
+                        class="bg-surface-container-highest border border-outline-variant/50 text-secondary hover:bg-secondary/10 active:scale-95 transition-all duration-200 px-6 py-3 rounded-lg font-headline font-black text-sm tracking-widest uppercase shadow-sm">
+                        KAYDET
+                    </button>
+                </div>
+                <div id="lastWeightDisplay" class="text-on-surface-variant text-sm font-medium h-6 flex items-center transition-all opacity-0">
+                    Son girilen ağırlık: <span id="weightValue" class="text-secondary font-bold text-base ml-1 mr-1"></span> kg
+                </div>
+            </div>
+            <script>
+                function saveWeight() {
+                    const input = document.getElementById('weightInput');
+                    const display = document.getElementById('lastWeightDisplay');
+                    const valueSpan = document.getElementById('weightValue');
+                    
+                    if(input.value && input.value > 0) {
+                        valueSpan.textContent = input.value;
+                        display.classList.remove('opacity-0');
+                        input.value = '';
+                    }
+                }
+            </script>
+        </section>
+<!-- Dynamic Empty Content Grid -->
         <section class="grid grid-cols-2 gap-4">
             <!-- Metric Block 1 -->
             <div class="bg-surface-container-highest p-5 rounded-lg aspect-square flex flex-col justify-between">
@@ -198,8 +302,7 @@
                 <div class="font-headline text-4xl font-black text-primary leading-none">0</div>
             </div>
         </section>
-
-        <!-- Finish Workout Section -->
+<!-- Finish Workout Section -->
         <section class="mt-10 mb-4">
             <button onclick="alert('Tebrikler, antrenman kaydedildi!')"
                 class="w-full bg-error text-on-error px-6 py-4 rounded-xl font-headline font-black text-sm tracking-widest uppercase flex justify-center items-center gap-2 active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,113,108,0.2)]">
@@ -207,36 +310,493 @@
                 ANTRENMANI BİTİR
             </button>
         </section>
-    </main>
+        </div>
 
-    <!-- BottomNavBar -->
-    <nav
-        class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#0e0e0e]/90 backdrop-blur-xl z-50 border-t border-[#484847]/20 shadow-[0_-4px_24px_rgba(255,144,105,0.06)]">
-        <!-- Dashboard (Active) -->
-        <a class="flex flex-col items-center justify-center text-[#ff9069] bg-[#262626] rounded-lg px-3 py-1 active:scale-90 transition-all duration-200"
-            href="#">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
-            <span class="font-['Lexend'] text-[10px] font-bold tracking-widest uppercase mt-1">DASHBOARD</span>
-        </a>
-        <!-- Workouts -->
-        <a class="flex flex-col items-center justify-center text-[#adaaaa] opacity-50 hover:text-[#00e3fd] active:scale-90 transition-all duration-200"
-            href="#">
-            <span class="material-symbols-outlined">fitness_center</span>
-            <span class="font-['Lexend'] text-[10px] font-bold tracking-widest uppercase mt-1">WORKOUTS</span>
-        </a>
-        <!-- Stats -->
-        <a class="flex flex-col items-center justify-center text-[#adaaaa] opacity-50 hover:text-[#00e3fd] active:scale-90 transition-all duration-200"
-            href="#">
-            <span class="material-symbols-outlined">leaderboard</span>
-            <span class="font-['Lexend'] text-[10px] font-bold tracking-widest uppercase mt-1">STATS</span>
-        </a>
-        <!-- Profile -->
-        <a class="flex flex-col items-center justify-center text-[#adaaaa] opacity-50 hover:text-[#00e3fd] active:scale-90 transition-all duration-200"
-            href="#">
-            <span class="material-symbols-outlined">person</span>
-            <span class="font-['Lexend'] text-[10px] font-bold tracking-widest uppercase mt-1">PROFILE</span>
-        </a>
-    </nav>
+        <!-- TAB: PLAN -->
+        <div id="tab-plan" class="tab-content hidden pb-20 w-full">
+            <div class="mb-6">
+                <h2 class="font-headline text-3xl font-black italic tracking-tighter uppercase text-secondary">Açık Hava Planı</h2>
+                <p class="text-on-surface-variant text-sm mt-1 font-medium">Nefes al ve dışarıda koş.</p>
+            </div>
+<!-- Map Section -->
+        <section class="mt-8 mb-2">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-headline text-lg font-bold tracking-tight">Açık Hava Rotan</h3>
+                <span class="material-symbols-outlined text-secondary text-[20px]">map</span>
+            </div>
+            <div class="bg-surface-container-low p-2 rounded-xl border border-outline-variant/20 shadow-sm relative overflow-hidden">
+                <!-- Map Container -->
+                <div id="runMap" class="w-full h-64 rounded-lg z-0" style="filter: invert(90%) hue-rotate(180deg) brightness(85%) contrast(110%);"></div>
+                
+                <!-- Status Overlay -->
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-surface/90 backdrop-blur-md px-4 py-2 rounded-full border border-outline-variant/50 shadow-lg z-10 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary animate-pulse text-[16px]">location_on</span>
+                    <span class="text-[10px] font-bold font-headline text-on-surface tracking-widest uppercase" id="locationStatus">Konum Aranıyor...</span>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    let lat = 41.0082;
+                    let lng = 28.9784; // Default to Istanbul
+                    window.leafletMap = L.map('runMap', { zoomControl: false, dragging: false, scrollWheelZoom: false }).setView([lat, lng], 13);
+
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                        attribution: '&copy; OSM'
+                    }).addTo(map);
+
+                    const customIcon = L.divIcon({
+                        className: 'custom-div-icon',
+                        html: '<div class="w-4 h-4 bg-secondary rounded-full border-[3px] border-white shadow-[0_0_15px_rgba(0,227,253,1)] animate-pulse"></div>',
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    });
+
+                    let marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
+
+                    if ("geolocation" in navigator) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            lat = position.coords.latitude;
+                            lng = position.coords.longitude;
+                            map.setView([lat, lng], 15);
+                            marker.setLatLng([lat, lng]);
+                            const statusEl = document.getElementById('locationStatus');
+                            statusEl.innerText = "Konum Bulundu";
+                            statusEl.classList.add('text-secondary');
+                        }, function(error) {
+                            console.warn("Geolocation Error:", error);
+                            document.getElementById('locationStatus').innerText = "Varsayılan Konum (İST)";
+                        }, { timeout: 10000 });
+                    } else {
+                        document.getElementById('locationStatus').innerText = "Simüle Edildi";
+                    }
+                });
+            </script>
+        </section>
+        </div>
+
+        <!-- TAB: COACH -->
+        <div id="tab-coach" class="tab-content hidden pb-20 w-full">
+            <div class="mb-6">
+                <h2 class="font-headline text-3xl font-black italic tracking-tighter uppercase text-[#f09dff]">Yapay Zeka</h2>
+                <p class="text-on-surface-variant text-sm mt-1 font-medium">Akıllı antrenörün emrinde.</p>
+            </div>
+<!-- AI Coach Section -->
+        <section class="mt-10 mb-2">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-headline text-lg font-bold tracking-tight">Yapay Zeka Antrenör</h3>
+                <span class="material-symbols-outlined text-secondary animate-pulse">smart_toy</span>
+            </div>
+            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col h-[360px]">
+                <!-- Chat History Area -->
+                <div id="aiChatHistory" class="flex-1 overflow-y-auto mb-4 space-y-4 pr-1 custom-scrollbar flex flex-col">
+                    <!-- Initial AI Message -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-sm text-secondary">psychology</span>
+                        </div>
+                        <div class="bg-surface-container-highest text-on-surface text-sm p-3.5 rounded-2xl rounded-tl-none border border-outline-variant/10 shadow-sm leading-relaxed">
+                            Merhaba! Ben sanal antrenörün yapay zeka NAIM. 💪 Bugün kendini nasıl hissediyorsun veya idmanınla ilgili sormak istediğin bir şey var mı?
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Input Area -->
+                <div class="relative flex items-center mt-auto group">
+                    <button onclick="startDictation()" id="micBtn"
+                        class="absolute left-2 w-9 h-9 text-on-surface-variant hover:text-secondary hover:bg-surface-highest rounded-full flex items-center justify-center transition-all z-10" title="Sesli Komut">
+                        <span class="material-symbols-outlined text-[20px]">mic</span>
+                    </button>
+                    <input type="text" id="aiChatInput" placeholder="Klavye veya sesle sor..." 
+                        class="w-full bg-surface-container-highest border border-outline-variant/30 rounded-full pl-12 pr-14 py-3.5 text-on-surface text-sm focus:ring-2 focus:ring-secondary focus:border-transparent placeholder-on-surface-variant outline-none transition-all shadow-inner"
+                        onkeypress="if(event.key === 'Enter') sendAiMessage()">
+                    <button onclick="sendAiMessage()" 
+                        class="absolute right-1.5 w-10 h-10 bg-secondary text-on-secondary rounded-full flex items-center justify-center hover:bg-secondary-dim active:scale-90 transition-transform shadow-md">
+                        <span class="material-symbols-outlined text-sm">send</span>
+                    </button>
+                </div>
+            </div>
+            
+            <style>
+                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(118, 117, 117, 0.4); border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(118, 117, 117, 0.8); }
+                @keyframes pulse-dot { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 1; } }
+                .animate-pulse-dot { animation: pulse-dot 1s infinite ease-in-out; }
+            </style>
+            
+            <script>
+                function startDictation() {
+                    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        const recognition = new SpeechRecognition();
+                        
+                        recognition.continuous = false;
+                        recognition.interimResults = false;
+                        recognition.lang = 'tr-TR';
+                        
+                        const micBtn = document.getElementById('micBtn');
+                        const inputField = document.getElementById('aiChatInput');
+                        
+                        recognition.onstart = function() {
+                            micBtn.classList.add('text-error');
+                            micBtn.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-pulse">mic</span>';
+                            inputField.placeholder = "Dinliyorum...";
+                        };
+                        
+                        recognition.onresult = function(event) {
+                            const transcript = event.results[0][0].transcript;
+                            inputField.value = transcript;
+                        };
+                        
+                        recognition.onerror = function(event) {
+                            console.error('Ses tanıma hatası:', event.error);
+                            inputField.placeholder = "Ses anlaşılamadı.";
+                            setTimeout(() => {
+                                if (inputField.value === '') inputField.placeholder = "Klavye veya sesle sor...";
+                            }, 2000);
+                        };
+                        
+                        recognition.onend = function() {
+                            micBtn.classList.remove('text-error');
+                            micBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">mic</span>';
+                            if (inputField.value === '') inputField.placeholder = "Klavye veya sesle sor...";
+                        };
+                        
+                        recognition.start();
+                    } else {
+                        alert("Tarayıcınız ses tanıma (Web Speech API) özelliğini desteklemiyor.");
+                    }
+                }
+
+                function sendAiMessage() {
+                    const input = document.getElementById('aiChatInput');
+                    const message = input.value.trim();
+                    if (!message) return;
+                    
+                    const chatHistory = document.getElementById('aiChatHistory');
+                    
+                    // Add User Message
+                    const userMsgDiv = document.createElement('div');
+                    userMsgDiv.className = 'flex items-start justify-end gap-3';
+                    userMsgDiv.innerHTML = `
+                        <div class="bg-primary/10 text-on-surface text-sm p-3.5 rounded-2xl rounded-tr-none border border-primary/20 shadow-sm max-w-[85%] leading-relaxed">
+                            ${message}
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-sm text-primary">person</span>
+                        </div>
+                    `;
+                    chatHistory.appendChild(userMsgDiv);
+                    
+                    // Clear input and scroll down
+                    input.value = '';
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                    input.disabled = true;
+                    
+                    // Simulate AI Thinking
+                    const thinkingDiv = document.createElement('div');
+                    thinkingDiv.className = 'flex items-center gap-3 w-full';
+                    thinkingDiv.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-sm text-secondary">psychology</span>
+                        </div>
+                        <div class="bg-surface-container-highest p-3.5 rounded-2xl rounded-tl-none border border-outline-variant/10 shadow-sm flex gap-1.5 items-center">
+                            <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse-dot" style="animation-delay: 0s"></span>
+                            <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse-dot" style="animation-delay: 0.2s"></span>
+                            <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse-dot" style="animation-delay: 0.4s"></span>
+                        </div>
+                    `;
+                    chatHistory.appendChild(thinkingDiv);
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                    
+                    // Simulate AI Response
+                    setTimeout(() => {
+                        chatHistory.removeChild(thinkingDiv);
+                        
+                        let aiResponse = "Harika ilerliyorsun! Antrenmanlarına bu kararlılıkla devam edersen hedeflerine kısa sürede ulaşırsın. 💪";
+                        const lowerMsg = message.toLowerCase();
+                        
+                        if (lowerMsg.includes("yorgun") || lowerMsg.includes("halsiz") || lowerMsg.includes("uykusuz")) {
+                            aiResponse = "Bugün yorgun hissediyorsan, vücudunu dinlemek en önemlisidir. Ağır yükler girmek yerine hafif kardiyo veya aktif esneme (stretching) yapabilirsin. Unutma, toparlanma da antrenmanın bir parçasıdır! 🧘‍♂️";
+                        } else if (lowerMsg.includes("ağrı") || lowerMsg.includes("sakat")) {
+                            aiResponse = "Ağrıyan bölgeyi kesinlikle zorlama. Eğer ciddi bir acıysa bugün tam dinlenme (rest day) yap. Ağrı devam ederse bir fizyoterapiste danışmanı öneririm. Geçmiş olsun! 🩹";
+                        } else if (lowerMsg.includes("motivasyon") || lowerMsg.includes("istemsiz") || lowerMsg.includes("üşeniyorum")) {
+                            aiResponse = "Bazen başlamak en zor kısımdır. Kendine sadece '10 dakika antrenman yapıp bırakacağım' de. Göreceksin, ilk teri atınca devamı gelecek! Kalk ve harekete geç! 🔥";
+                        } else if (lowerMsg.includes("ne yapmalıyım") || lowerMsg.includes("program")) {
+                            aiResponse = "Bugünkü programına göre Üst Vücut (Push-Pull) veya Hiit kardiyo yapabilirsin. Vaktin azsa 20 dakikalık yüksek şiddetli dambıl rutini tam sana göre!";
+                        }
+                        
+                        const aiMsgDiv = document.createElement('div');
+                        aiMsgDiv.className = 'flex items-start gap-3';
+                        aiMsgDiv.innerHTML = `
+                            <div class="w-8 h-8 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-sm text-secondary">psychology</span>
+                            </div>
+                            <div class="bg-surface-container-highest text-on-surface text-sm p-3.5 rounded-2xl rounded-tl-none border border-outline-variant/10 shadow-sm max-w-[85%] leading-relaxed border-l-2 border-l-secondary">
+                                ${aiResponse}
+                            </div>
+                        `;
+                        chatHistory.appendChild(aiMsgDiv);
+                        chatHistory.scrollTop = chatHistory.scrollHeight;
+                        input.disabled = false;
+                        input.focus();
+                    }, 1200);
+                }
+            </script>
+        </section>
+        </div>
+
+        <!-- TAB: USER -->
+        <div id="tab-user" class="tab-content hidden pb-20 w-full">
+            <div class="mb-6">
+                <h2 class="font-headline text-3xl font-black italic tracking-tighter uppercase text-primary">Profil</h2>
+                <p class="text-on-surface-variant text-sm mt-1 font-medium">Antrenman hatıralarını sakla.</p>
+            </div>
+<!-- Camera Section -->
+        <section class="mt-8 mb-2">
+            <h3 class="font-headline text-lg font-bold tracking-tight mb-4 text-center">Antrenman Hatırası</h3>
+            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col items-center">
+                <!-- Image Preview Frame -->
+                <div id="photoFrame" class="w-full aspect-[4/3] bg-surface-container-highest rounded-lg border-2 border-dashed border-outline-variant/40 flex flex-col items-center justify-center mb-4 overflow-hidden relative hidden">
+                    <img id="workoutPhoto" src="" alt="Workout Photo" class="w-full h-full object-cover">
+                    <!-- Close button for removing photo -->
+                    <button onclick="removePhoto()" class="absolute top-3 right-3 bg-surface/80 text-on-surface rounded-full p-1.5 shadow-md hover:bg-surface-bright backdrop-blur-md transition-colors z-10">
+                        <span class="material-symbols-outlined text-sm block">close</span>
+                    </button>
+                </div>
+                
+                <!-- Camera Button -->
+                <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoUpload(event)">
+                <button onclick="document.getElementById('cameraInput').click()" 
+                    id="cameraButton"
+                    class="w-full bg-surface-container-highest border border-primary/50 text-primary hover:bg-primary/10 active:scale-95 transition-all duration-200 px-6 py-4 rounded-xl font-headline font-black text-sm tracking-widest uppercase flex justify-center items-center gap-2 shadow-[0_4px_14px_rgba(255,144,105,0.1)]">
+                    <span class="material-symbols-outlined">photo_camera</span>
+                    GÜNÜN FOTOSUNU ÇEK
+                </button>
+            </div>
+            <script>
+                function handlePhotoUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('workoutPhoto').src = e.target.result;
+                            document.getElementById('photoFrame').classList.remove('hidden');
+                            document.getElementById('cameraButton').innerHTML = '<span class="material-symbols-outlined">sync</span> FOTOĞRAFI DEĞİŞTİR';
+                            document.getElementById('cameraButton').classList.replace('text-primary', 'text-on-surface');
+                            document.getElementById('cameraButton').classList.replace('border-primary/50', 'border-outline-variant/50');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                }
+
+                function removePhoto() {
+                    document.getElementById('cameraInput').value = '';
+                    document.getElementById('workoutPhoto').src = '';
+                    document.getElementById('photoFrame').classList.add('hidden');
+                    document.getElementById('cameraButton').innerHTML = '<span class="material-symbols-outlined">photo_camera</span> GÜNÜN FOTOSUNU ÇEK';
+                    document.getElementById('cameraButton').classList.replace('text-on-surface', 'text-primary');
+                    document.getElementById('cameraButton').classList.replace('border-outline-variant/50', 'border-primary/50');
+                }
+            </script>
+        </section>
+        </div>
+</main>
+
+    <!-- Floating Bottom Navigation -->
+    <div class="fixed bottom-6 left-0 w-full px-5 pointer-events-none z-50">
+        <nav class="pointer-events-auto flex justify-around items-center px-1.5 py-3 bg-surface-container-highest/85 backdrop-blur-2xl rounded-[32px] border border-white/5 shadow-[0_16px_40px_rgba(0,0,0,0.6)]">
+            <!-- Dashboard (Active) -->
+            <a onclick="switchTab('tab-home', this)" class="nav-item nav-active flex flex-col items-center justify-center text-primary bg-primary/10 rounded-[22px] px-4 py-2 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+                <span class="font-headline text-[9px] font-black tracking-widest uppercase mt-1">HOME</span>
+            </a>
+            <!-- Plan -->
+            <a onclick="switchTab('tab-plan', this)" class="nav-item flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary hover:bg-secondary/10 rounded-[22px] px-4 py-2 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined text-[24px]">map</span>
+                <span class="font-headline text-[9px] font-bold tracking-widest uppercase mt-1">PLAN</span>
+            </a>
+            <!-- AI Coach -->
+            <a onclick="switchTab('tab-coach', this)" class="nav-item flex flex-col items-center justify-center text-on-surface-variant hover:text-[#f09dff] hover:bg-[#f09dff]/10 rounded-[22px] px-4 py-2 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined text-[24px]">smart_toy</span>
+                <span class="font-headline text-[9px] font-bold tracking-widest uppercase mt-1">COACH</span>
+            </a>
+            <!-- User -->
+            <a onclick="switchTab('tab-user', this)" class="nav-item flex flex-col items-center justify-center text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-[22px] px-4 py-2 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined text-[24px]">person</span>
+                <span class="font-headline text-[9px] font-bold tracking-widest uppercase mt-1">USER</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Theme Toggle Logic & Light Mode Overrides -->
+    <style>
+        html:not(.dark) body { background-color: #fcf9f8 !important; color: #1a1a1b !important; }
+        html:not(.dark) header { background-color: #ffffff !important; border-bottom: 1px solid #e5e5e5; }
+        html:not(.dark) nav { background-color: rgba(255, 255, 255, 0.95) !important; border-top: 1px solid #e5e5e5; }
+        html:not(.dark) .bg-surface-container-low, html:not(.dark) .bg-surface-container-highest { background-color: #ffffff !important; border-color: #e5e5e5 !important; }
+        html:not(.dark) .text-on-surface { color: #121212 !important; }
+        html:not(.dark) .text-on-surface-variant { color: #666666 !important; }
+        html:not(.dark) input { background-color: #f5f5f5 !important; color: #121212 !important; border-color: #d4d4d4 !important; }
+        html:not(.dark) .text-secondary { color: #006875 !important; }
+    </style>
+    <script>
+        function toggleTheme() {
+            const htmlElement = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                themeIcon.textContent = 'dark_mode'; // Moon icon when currently in light mode to switch back
+            } else {
+                htmlElement.classList.add('dark');
+                themeIcon.textContent = 'light_mode'; // Sun icon when currently in dark mode to switch back
+            }
+        }
+    </script>
+
+    <!-- App Guide / Documentation Modal -->
+    <div id="guideModal" class="fixed inset-0 z-[100] hidden bg-[#0e0e0e]/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-surface-container-highest w-full max-w-md max-h-[85vh] rounded-2xl border border-outline-variant/30 flex flex-col shadow-2xl transform scale-95 transition-transform duration-300" id="guideModalContent">
+            <div class="p-5 border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-low rounded-t-2xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-secondary">auto_awesome</span>
+                    </div>
+                    <div>
+                        <h2 class="font-headline text-xl font-black text-on-surface tracking-tight leading-none uppercase">Akıllı Kılavuz</h2>
+                        <span class="text-[10px] text-secondary font-bold tracking-widest uppercase mt-1 block">Yapay Zeka Destekli</span>
+                    </div>
+                </div>
+                <button onclick="closeGuide()" class="text-on-surface-variant hover:text-error active:scale-90 transition-all p-1.5 rounded-full bg-surface">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto custom-scrollbar flex-1 relative" id="guideContentBody">
+                <!-- Generating State -->
+                <div id="guideLoading" class="flex flex-col items-center justify-center py-12 space-y-4">
+                    <span class="material-symbols-outlined text-secondary text-[48px] animate-spin" style="animation-duration: 2s;">sync</span>
+                    <p class="text-on-surface text-center font-medium opacity-80 animate-pulse text-sm px-4">Yapay Zeka uygulamanın güncel yeteneklerini tarıyor ve kılavuz oluşturuyor...</p>
+                </div>
+                <!-- Generated Content -->
+                <div id="guideText" class="hidden space-y-4 text-sm mt-2">
+                    <p class="text-on-surface font-medium border-l-[3px] border-secondary pl-3 tracking-wide mb-6">Merhaba! Ben uygulamanın Yapay Zeka asistanı. Cep Herkülü <strong class="text-primary italic">NAIM</strong> sisteminin yeteneklerini senin için derledim:</p>
+                    
+                    <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-[6rem] text-primary">monitor_weight</span></div>
+                        <h4 class="font-headline font-bold text-lg text-primary flex items-center gap-2 mb-2 relative z-10"><span class="material-symbols-outlined text-sm">monitor_weight</span> Hızlı Ağırlık Girişi</h4>
+                        <p class="text-on-surface-variant font-medium relative z-10 leading-relaxed">Antrenmanın ortasında kaldırdığın ağırlığı sisteme girebilir ve "Son girilen ağırlık" olarak anında kayıt altına alabilirsin.</p>
+                    </div>
+                    
+                    <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-[6rem] text-secondary">smart_toy</span></div>
+                        <h4 class="font-headline font-bold text-lg text-secondary flex items-center gap-2 mb-2 relative z-10"><span class="material-symbols-outlined text-sm text-secondary">smart_toy</span> <span class="material-symbols-outlined text-sm text-secondary ml-[-6px]">mic</span> Yapay Zeka & Sesli Komut</h4>
+                        <p class="text-on-surface-variant font-medium relative z-10 leading-relaxed">Sorularını metin olarak yazabilir veya <strong>Mikrofon</strong> butonuna basarak sesli iletebilirsin. Sana özel antrenman analizleri ve motivasyon sağlar.</p>
+                    </div>
+                    
+                    <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-[6rem] text-tertiary">map</span></div>
+                        <h4 class="font-headline font-bold text-lg text-tertiary flex items-center gap-2 mb-2 relative z-10"><span class="material-symbols-outlined text-sm">map</span> Açık Hava Rotan (GPS)</h4>
+                        <p class="text-on-surface-variant font-medium relative z-10 leading-relaxed">Dış mekan antrenmanların için bulunduğun konumu anlık olarak neon vurgulu street-map haritamız üzerinde takip edebilirsin.</p>
+                    </div>
+                    
+                    <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-[6rem] text-error">photo_camera</span></div>
+                        <h4 class="font-headline font-bold text-lg text-error flex items-center gap-2 mb-2 relative z-10"><span class="material-symbols-outlined text-sm">photo_camera</span> Günün Fotosunu Çek</h4>
+                        <p class="text-on-surface-variant font-medium relative z-10 leading-relaxed">Gelişimini fotoğrafla! Kameranla çek veya galerinden seç; antrenman sonrası fotoğrafını interaktif log çerçevesine sabitle.</p>
+                    </div>
+                    
+                    <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-[6rem] text-[#ff9069]">translate</span></div>
+                        <h4 class="font-headline font-bold text-lg text-[#ff9069] flex items-center gap-2 mb-2 relative z-10"><span class="material-symbols-outlined text-sm">translate</span> Çoklu Dil & Gece Modu</h4>
+                        <p class="text-on-surface-variant font-medium relative z-10 leading-relaxed">Sağ üst menü üzerinden Çoklu Dil (i18n) ve Aydınlık/Karanlık tasarım modları arasında dinamik geçiş yapabilirsin.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-outline-variant/20 bg-surface-container-lowest rounded-b-2xl">
+                <button onclick="closeGuide()" class="kinetic-gradient w-full text-on-primary-fixed font-headline font-black text-sm uppercase tracking-widest py-3.5 rounded-xl active:scale-95 transition-transform shadow-[0_4px_14px_rgba(255,144,105,0.2)] flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">done</span> Okudum, Anladım
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showGuide() {
+            const modal = document.getElementById('guideModal');
+            const modalContent = document.getElementById('guideModalContent');
+            const loading = document.getElementById('guideLoading');
+            const textContent = document.getElementById('guideText');
+            
+            modal.classList.remove('hidden');
+            // Force reflow for UI transition
+            void modal.offsetWidth;
+            
+            modal.classList.remove('opacity-0');
+            modalContent.classList.remove('scale-95');
+            
+            loading.classList.remove('hidden');
+            textContent.classList.add('hidden');
+            
+            // Simulate AI reading abilities and generating guide
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                textContent.classList.remove('hidden');
+            }, 1800);
+        }
+        
+        function closeGuide() {
+            const modal = document.getElementById('guideModal');
+            const modalContent = document.getElementById('guideModalContent');
+            
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+
+    <script>
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const target = document.getElementById(tabId);
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('block');
+                
+                target.style.animation = 'none';
+                void target.offsetWidth; 
+                target.style.animation = 'slideUpFade 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both'; 
+            }
+
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.className = el.className.replace(/nav-active|text-primary|bg-primary\/10|text-secondary|bg-secondary\/10|text-\[#f09dff\]|bg-\[#f09dff\]\/10/g, '').trim();
+                el.classList.add('text-on-surface-variant');
+            });
+            
+            // Re-apply appropriate colors based on the tab
+            if (element) {
+                element.classList.remove('text-on-surface-variant');
+                element.classList.add('nav-active');
+                if (tabId === 'tab-home') element.classList.add('text-primary', 'bg-primary/10');
+                if (tabId === 'tab-plan') element.classList.add('text-secondary', 'bg-secondary/10');
+                if (tabId === 'tab-coach') element.classList.add('text-[#f09dff]', 'bg-[#f09dff]/10');
+                if (tabId === 'tab-user') element.classList.add('text-primary', 'bg-primary/10');
+            }
+            
+            if (tabId === 'tab-plan' && window.leafletMap) {
+                setTimeout(() => window.leafletMap.invalidateSize(), 100);
+            }
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    </script>
 </body>
 
 </html>
